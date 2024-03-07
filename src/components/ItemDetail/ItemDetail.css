@@ -1,0 +1,22 @@
+.card-size {
+    background-color: #f0f0f0;
+    width: 40rem;
+    border-radius: 2px solid #ddd;
+}
+
+.add-card {
+    text-decoration: none;
+    padding: 6px 0px;
+    margin: 10px auto;
+    width: 11rem;
+    text-align: center;
+    background-color: #f39300;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+@media only screen and (max-width : 900px) {
+    .card-size {
+        width: 20rem;
+    }
+}
