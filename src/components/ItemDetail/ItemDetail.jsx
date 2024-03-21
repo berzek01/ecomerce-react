@@ -4,8 +4,8 @@ import ItemCount from '../ItemCount/ItemCount';
 import { Col, Row } from 'react-bootstrap';
 import './ItemDetail.css'
 
-const ItemDetail = ({ name, description = '', img, price, stock }) => {
-
+const ItemDetail = ({ id, name, description = '', img, price, stock }) => {
+console.log(id,name,description,img,price,stock)
     const [showText, setShowText] = useState(false);
 
     const handleShowText = () => {
@@ -16,6 +16,7 @@ const ItemDetail = ({ name, description = '', img, price, stock }) => {
         ? description
         : description.slice(0, 78) + '...';
 
+    const objItemCount = { id, name, description, price, stock }
 
     return (
         <Card className='mx-auto card-size' border="dark">
@@ -32,7 +33,7 @@ const ItemDetail = ({ name, description = '', img, price, stock }) => {
                             <span className='span-item' onClick={handleShowText}> Leer {showText ? 'menos' : 'mas'}</span>
                         </Card.Text>
                         <Card.Text className='price'>S/{price}</Card.Text>
-                        <ItemCount initial={1} stock={stock} />
+                        <ItemCount {...objItemCount} />
                     </Col>
                 </Row>
             </Card.Body>

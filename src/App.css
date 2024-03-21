@@ -1,5 +1,4 @@
 html * {
-  font-size: 1em !important;
   color: #1a243a !important;
   font-family: cursive !important;
 }
@@ -57,6 +56,11 @@ html * {
   color: #a4b122 !important;
   font-size: 22px !important;
   font-weight: 600;
+}
+
+.footer {
+  text-align: center;
+  padding: 10px;
 }
 
 /* #f34a23 red */

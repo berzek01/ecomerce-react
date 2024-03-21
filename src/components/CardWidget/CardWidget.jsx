@@ -1,10 +1,15 @@
-import viteLogo from '/vite.svg'
+import { Link } from 'react-router-dom';
+import { useCart } from '../../contexts/CartContext';
 import { FaShoppingCart } from "react-icons/fa";
 
 const CardWidget = () => {
+    const { totalQuantity } = useCart();
+
     return (
         <>
-            <FaShoppingCart />0
+        <Link to={'/cart'}>
+            <FaShoppingCart />{totalQuantity}
+        </Link>
         </>
     )
 }
