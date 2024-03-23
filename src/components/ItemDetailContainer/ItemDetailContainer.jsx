@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import ItemDetail from "../ItemDetail/ItemDetail";
 import { db } from "../../services/firebase";
 import { doc, getDoc } from "firebase/firestore";
+import Titulo from "../General/Titulo";
 
 const ItemDetailContainer = ({ greeting }) => {
 
@@ -21,8 +22,8 @@ const ItemDetailContainer = ({ greeting }) => {
     }, []);
 
     return (
-        <div style={{ display: "grid" }}>
-            <h2 style={{ margin: '2rem auto' }}>{greeting}</h2>
+        <div>
+            <Titulo label={greeting}/>
             {loading ? <h1>Cargando... </h1> : <ItemDetail {...product} />}
         </div>
     )

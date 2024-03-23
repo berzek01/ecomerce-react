@@ -3,6 +3,7 @@ import ItemList from "../ItemList/ItemList";
 import { useParams } from "react-router-dom";
 import { db } from "../../services/firebase";
 import { collection, getDocs, query, where } from "firebase/firestore";
+import Titulo from "../General/Titulo";
 
 const ItemListContainer = ({ greeting }) => {
 
@@ -25,8 +26,8 @@ const ItemListContainer = ({ greeting }) => {
     }, [categoryId]);
 
     return (
-        <div style={{ display: "grid" }}>
-            <h2 style={{ margin: '2rem auto' }}>{greeting}</h2>
+        <div>
+            <Titulo label={greeting}/>
             <ItemList products={products} />
         </div>
     )

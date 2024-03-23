@@ -1,6 +1,6 @@
 html * {
-  color: #1a243a !important;
-  font-family: cursive !important;
+  color: #1a243a;
+  font-family: cursive;
 }
 
 .card-img {
@@ -22,16 +22,24 @@ html * {
 .link-custom {
   text-decoration: none;
   padding: 7px 15px;
-  margin: 0 auto;
+  margin: 10px auto;
   text-align: center;
   background-color: #f39300;
   border-radius: 10px;
+  border: 2px solid;
+}
+
+
+.link-custom:hover {
+  color: #f0f0f0;
+  transition-property: color;
+  transition-duration: 0.5s;
+  transition-timing-function: ease-in-out;
 }
 
 .stock-custom {
-  font-size: 13px !important;
+  font-size: 13px;
   padding: 6px;
-  color: white !important;
   background-color: #E5C500;
   border-radius: 10px;
 }
@@ -42,19 +50,19 @@ html * {
 
 .title-custom {
   color: rgb(51, 51, 51);
-  font-size: 18px !important;
+  font-size: 18px;
   font-weight: bold;
   padding: 10px 0;
 }
 
 .span-item {
-  font-size: 13px !important;
+  font-size: 13px;
   cursor: pointer;
 }
 
 .price {
-  color: #a4b122 !important;
-  font-size: 22px !important;
+  color: #a4b122;
+  font-size: 22px;
   font-weight: 600;
 }
 
