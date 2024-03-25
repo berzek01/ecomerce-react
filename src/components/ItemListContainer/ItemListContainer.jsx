@@ -1,34 +1,28 @@
-import { useEffect, useState } from "react"
-import ItemList from "../ItemList/ItemList";
 import { useParams } from "react-router-dom";
-import { db } from "../../services/firebase";
-import { collection, getDocs, query, where } from "firebase/firestore";
 import Titulo from "../General/Titulo";
+import Spin from "../General/Spin";
+import ItemList from "../ItemList/ItemList";
+import { getProducts } from "../../services/firebase/firebase";
+import { useAsync } from "../../hooks/useAsync";
+import Alerta from "../General/Alerta";
+import { useAlert } from "../../contexts/AlertContext";
 
 const ItemListContainer = ({ greeting }) => {
-
-    const [products, setProducts] = useState([]);
+    const { alert, callAlert } = useAlert();
     const { categoryId } = useParams();
 
-    useEffect(() => {
-        const collectionRef = categoryId
-        ? query(collection(db, "productos"), where("category", "==", categoryId))
-        : collection(db, "productos")
-        
-        getDocs(collectionRef).then((querySnapshot)=>{
-            console.log(querySnapshot);
-            const products = querySnapshot.docs.map((doc) => {
-                return { id: doc.id, ...doc.data() }
-            })
-            console.log(products)
-            setProducts(products)
-        }).catch(error => alert(error));
-    }, [categoryId]);
+    const getProductFromFirestore = () => getProducts(categoryId);
+    const { data, error, isLoading } = useAsync(getProductFromFirestore, [categoryId]);
+
+    if(error){
+        callAlert();
+    }
 
     return (
         <div>
-            <Titulo label={greeting}/>
-            <ItemList products={products} />
+            <Titulo label={greeting} />
+            <Alerta severity={'Danger'} show={alert} message={"Sin data"} />
+            { !data ? <Spin/> : <ItemList products={data} />}
         </div>
     )
 }

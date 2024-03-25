@@ -5,7 +5,6 @@ import { Col, Row } from 'react-bootstrap';
 import './ItemDetail.css'
 
 const ItemDetail = ({ id, name, description = '', img, price, stock }) => {
-    console.log(id, name, description, img, price, stock)
     const [showText, setShowText] = useState(false);
     const [isMobileDevice, setIsMobileDevice] = useState(false);
 

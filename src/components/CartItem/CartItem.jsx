@@ -9,7 +9,7 @@ const CartItem = ({id, name, price, quantity})=>{
     }
     return (
         <article className="articleCart">
-            <header>
+            <header style={{maxWidth: "230px"}}>
                 <h2>{name}</h2>
             </header>
 
@@ -19,7 +19,7 @@ const CartItem = ({id, name, price, quantity})=>{
             </section>
             <footer>
                 <p>Subtotal: S/{price*quantity}</p>
-                <button onClick={()=>deleteCart(id)}><FaTrash /></button>
+                <button className="bg-danger" onClick={()=>deleteCart(id)}><FaTrash /></button>
             </footer>
         </article>
     );

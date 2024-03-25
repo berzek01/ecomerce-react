@@ -4,11 +4,15 @@ import ItemDetail from "../ItemDetail/ItemDetail";
 import { db } from "../../services/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import Titulo from "../General/Titulo";
+import Spin from "../General/Spin";
+import Alerta from "../General/Alerta";
+import { useAlert } from "../../contexts/AlertContext";
 
 const ItemDetailContainer = ({ greeting }) => {
 
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
+    const {alert} = useAlert()
     const { itemId } = useParams();
 
     useEffect(() => {
@@ -24,7 +28,8 @@ const ItemDetailContainer = ({ greeting }) => {
     return (
         <div>
             <Titulo label={greeting}/>
-            {loading ? <h1>Cargando... </h1> : <ItemDetail {...product} />}
+            <Alerta severity={'danger'} show={alert} message={'Producto ya agregado al carrito'}/>
+            {loading ? <Spin/> : <ItemDetail {...product} />}
         </div>
     )
 }

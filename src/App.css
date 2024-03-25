@@ -29,6 +29,10 @@ html * {
   border: 2px solid;
 }
 
+.bg-danger {
+  background-color: #f34a23;
+}
+
 
 .link-custom:hover {
   color: #f0f0f0;
@@ -69,6 +73,10 @@ html * {
 .footer {
   text-align: center;
   padding: 10px;
+}
+
+.disabled-button {
+  background-color: #ccc;
 }
 
 /* #f34a23 red */

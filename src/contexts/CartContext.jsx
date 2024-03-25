@@ -9,7 +9,7 @@ export const CartProvider = ({ children }) => {
         if (!isInCart(productToAdd.id)) {
             setCart([...cart, productToAdd])
         } else {
-            alert('el producto ya exisste');
+            // setProductAdded(true);
         }
     };
 
@@ -37,7 +37,6 @@ export const CartProvider = ({ children }) => {
         cart.forEach(prod => {
             accu += prod.quantity
         })
-        console.log(accu)
         return accu
     }
 

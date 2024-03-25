@@ -1,25 +1,42 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useCart } from "../../contexts/CartContext";
 import { db } from "../../services/firebase";
 import { addDoc, collection, documentId, getDocs, query, where, writeBatch } from "firebase/firestore";
-import { Button, Form } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import './Checkout.css';
 import Titulo from "../General/Titulo";
+import Alerta from "../General/Alerta";
+import { useAlert } from "../../contexts/AlertContext";
+import { useNavigate } from "react-router-dom";
+import { useFromData } from "../../hooks/userFormData";
 
 const Checkout = ({ greeting }) => {
-    const [loading, setLoading] = useState(false);
-    const [orderCreated, setOrderCreated] = useState(false);
-
+    const { alert, callAlert } = useAlert();
+    const colorRef = useRef('danger');
+    const messageRef = useRef('');
+    const { inputs, handleChange } = useFromData();
     const { cart, totalQuantity, totalPrice, clearCart } = useCart();
-    const createOrder = async () => {
-        setLoading(true);
+    const [validated, setValidated] = useState(false);
+    const navigate = useNavigate();
+    const handleSubmit = (event) => {
+        const form = event.currentTarget;
+        if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        setValidated(true);
+        if(form.checkValidity() === true) createOrder(event)
+    };
+    const createOrder = async (event) => {
+        event.preventDefault();
         try {
             const objOrder = {
                 buyer: {
-                    firstName: "Josue",
-                    lastName: "Alfaro",
-                    phone: "912456785",
-                    address: "Jr. space 123"
+                    firstName: inputs.firstname,
+                    lastName: inputs.lastname,
+                    phone: inputs.phone,
+                    address: inputs.address
                 },
                 items: cart, totalQuantity, totalPrice,
                 date: new Date()
@@ -39,11 +56,7 @@ const Checkout = ({ greeting }) => {
                 const stockDb = dataDoc.stock;
                 const productAddedToCart = cart.find((prod) => prod.id === doc.id);
                 const prodQuantity = productAddedToCart?.quantity;
-                console.log('por la rexuxa')
-                console.log(stockDb)
-                console.log(prodQuantity)
                 if (stockDb >= prodQuantity) {
-                    //actualizar db
                     batch.update(doc.ref, { stock: stockDb - prodQuantity })
                 } else {
                     outOfStock.push({ id: doc.id, ...dataDoc })
@@ -54,57 +67,66 @@ const Checkout = ({ greeting }) => {
                 await batch.commit();
                 const orderRef = collection(db, "orders");
                 const orderAdded = await addDoc(orderRef, objOrder);
-                console.log(`el id de su  roder es: ${orderAdded.id}`);
+                console.log(`el id de su  orden es: ${orderAdded.id}`);
                 clearCart();
-                setOrderCreated(true);
+                colorRef.current = 'Success';
+                messageRef.current = "Compra registrada exitosamente";
+                callAlert();
+                setTimeout(() => {
+                    navigate("/");
+                }, 3000);
             } else {
-                console.log(`Hay productos que estan fuera de stock`);
+                colorRef.current = 'Warning';
+                messageRef.current = "hay productos fuera de stock";
+                callAlert();
             }
         } catch (error) {
-            console.log("hay productos fuera de stock");
-        } finally {
-            setLoading(false);
+            colorRef.current = 'Danger';
+            messageRef.current = "ocurrio un error, intente mas tarde";
+            callAlert();
         }
     };
 
-    if (loading) {
-        return <h1>Se esta generando su order</h1>
-    }
-
-    if (orderCreated) {
-        return <h1>La orden fue creada correctamente</h1>
-    }
-
     return (
         <div>
-            <Titulo label={greeting}/>
-            <Form onSubmit={createOrder} className="form-center">
+            <Titulo label={greeting} />
+            <Alerta severity={colorRef.current} show={alert} message={messageRef.current} />
+            <Form noValidate validated={validated} onSubmit={handleSubmit} className="form-center">
                 <Form.Group className="mb-3" controlId="firstname">
-                    <Form.Label>Ingrese su nombre</Form.Label>
-                    <Form.Control type="text" placeholder="nombre" />
-                    {/* <Form.Text className="text-muted">
-                        We'll never share your email with anyone else.
-                    </Form.Text> */}
+                    <Form.Label>Nombres</Form.Label>
+                    <Form.Control required type="text" placeholder="Ingresar nombres"
+                        value={inputs.name} onChange={handleChange} />
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="lastname">
-                    <Form.Label>Ingrese su apellido</Form.Label>
-                    <Form.Control type="text" placeholder="apellido" />
+                    <Form.Label>Apellidos</Form.Label>
+                    <Form.Control required type="text" placeholder="Ingresar apellidos"
+                        value={inputs.name} onChange={handleChange} />
                 </Form.Group>
 
-                <Form.Group className="mb-3" controlId="lastname">
-                    <Form.Label>Ingrese su telefono</Form.Label>
-                    <Form.Control type="tel" placeholder="555 555 555" />
+                <Form.Group className="mb-3" controlId="phone">
+                    <Form.Label>Telefono</Form.Label>
+                    <Form.Control required type="tel" placeholder="555 555 5555"
+                        value={inputs.name} onChange={handleChange} />
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="email">
-                    <Form.Label>Ingrese su correo</Form.Label>
-                    <Form.Control type="email" placeholder="example@example.com" />
+                    <Form.Label>Correo</Form.Label>
+                    <Form.Control required type="email" placeholder="example@example.com"
+                        value={inputs.name} onChange={handleChange} />
                 </Form.Group>
 
-                <Button variant="primary" type="submit">
-                    Realizar compra
-                </Button>
+                 <Form.Group className="mb-3" controlId="address">
+                    <Form.Label>Dirección</Form.Label>
+                    <Form.Control as="textarea" rows={2} required
+                        value={inputs.name} onChange={handleChange} />
+                </Form.Group>
+                
+                <div className="d-flex">
+                    <button className={`link-custom`} type="submit">
+                        Realizar compra
+                    </button>
+                </div>
             </Form>
         </div>
     );
